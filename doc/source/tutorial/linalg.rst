@@ -156,7 +156,7 @@ Solving linear system
 Solving linear systems of equations is straightforward using the scipy
 command :obj:`linalg.solve`. This command expects an input matrix and
 a right-hand-side vector. The solution vector is then computed. An
-option for entering a symmetrix matrix is offered which can speed up
+option for entering a symmetric matrix is offered which can speed up
 the processing when applicable.  As an example, suppose it is desired
 to solve the following simultaneous equations:
 
@@ -525,16 +525,16 @@ eigenvalues can then be found.
     >>> A = np.array([[1, 2], [3, 4]])
     >>> la, v = linalg.eig(A)
     >>> l1, l2 = la
-    >>> print l1, l2   # eigenvalues
+    >>> print(l1, l2)   # eigenvalues
     (-0.372281323269+0j) (5.37228132327+0j)
-    >>> print v[:, 0]   # first eigenvector
+    >>> print(v[:, 0])   # first eigenvector
     [-0.82456484  0.56576746]
-    >>> print v[:, 1]   # second eigenvector
+    >>> print(v[:, 1])   # second eigenvector
     [-0.41597356 -0.90937671]
-    >>> print np.sum(abs(v**2), axis=0)  # eigenvectors are unitary
+    >>> print(np.sum(abs(v**2), axis=0))  # eigenvectors are unitary
     [ 1.  1.]
     >>> v1 = np.array(v[:, 0]).T
-    >>> print linalg.norm(A.dot(v1) - l1*v1)  # check the computation
+    >>> print(linalg.norm(A.dot(v1) - l1*v1))  # check the computation
     3.23682852457e-16
 
 
@@ -811,31 +811,7 @@ is rarely the best way to calculate a matrix function.
 Exponential and logarithm functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The matrix exponential is one of the more common matrix functions. It
-can be defined for square matrices as
-
-.. math::
-
-    e^{\mathbf{A}}=\sum_{k=0}^{\infty}\frac{1}{k!}\mathbf{A}^{k}.
-
-The command :obj:`linalg.expm3` uses this Taylor series definition to compute the matrix exponential.
-Due to poor convergence properties it is not often used.
-
-Another method to compute the matrix exponential is to find an
-eigenvalue decomposition of :math:`\mathbf{A}` :
-
-.. math::
-
-    \mathbf{A}=\mathbf{V}\boldsymbol{\Lambda}\mathbf{V}^{-1}
-
-and note that
-
-.. math::
-
-    e^{\mathbf{A}}=\mathbf{V}e^{\boldsymbol{\Lambda}}\mathbf{V}^{-1}
-
-where the matrix exponential of the diagonal matrix :math:`\boldsymbol{\Lambda}` is just the exponential of its elements. This method is implemented in :obj:`linalg.expm2` .
-
+The matrix exponential is one of the more common matrix functions.
 The preferred method for implementing the matrix exponential is to use
 scaling and a Padé approximation for :math:`e^{x}` . This algorithm is
 implemented as :obj:`linalg.expm` .
@@ -901,7 +877,7 @@ Finally, any arbitrary function that takes one complex number and
 returns a complex number can be called as a matrix function using the
 command :obj:`linalg.funm`. This command takes the matrix and an
 arbitrary Python function. It then implements an algorithm from Golub
-and Van Loan's book "Matrix Computations" to compute function applied
+and Van Loan's book "Matrix Computations" to compute the function applied
 to the matrix using a Schur decomposition.  Note that *the function
 needs to accept complex numbers* as input in order to work with this
 algorithm. For example the following code computes the zeroth-order

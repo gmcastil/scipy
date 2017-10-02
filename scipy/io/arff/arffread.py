@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 # Last Change: Mon Aug 20 08:00 PM 2007 J
 from __future__ import division, print_function, absolute_import
 
@@ -31,7 +30,7 @@ __all__ = ['MetaData', 'loadarff', 'ArffError', 'ParseArffError']
 #   - numeric and nominal attributes
 #   - missing values for numeric attributes
 
-r_meta = re.compile('^\s*@')
+r_meta = re.compile(r'^\s*@')
 # Match a comment
 r_comment = re.compile(r'^%')
 # Match an empty line
@@ -44,8 +43,6 @@ r_attribute = re.compile(r'^@[Aa][Tt][Tt][Rr][Ii][Bb][Uu][Tt][Ee]\s*(..*$)')
 
 # To get attributes name enclosed with ''
 r_comattrval = re.compile(r"'(..+)'\s+(..+$)")
-# To get attributes name enclosed with '', possibly spread across multilines
-r_mcomattrval = re.compile(r"'([..\n]+)'\s+(..+$)")
 # To get normal attributes
 r_wcomattrval = re.compile(r"(\S+)\s+(..+$)")
 
@@ -412,7 +409,7 @@ class MetaData(object):
         data, meta = loadarff('iris.arff')
         # This will print the attributes names of the iris.arff dataset
         for i in meta:
-            print i
+            print(i)
         # This works too
         meta.names()
         # Getting attribute type
@@ -513,7 +510,7 @@ def loadarff(f):
     Examples
     --------
     >>> from scipy.io import arff
-    >>> from cStringIO import StringIO
+    >>> from io import StringIO
     >>> content = \"\"\"
     ... @relation foo
     ... @attribute width  numeric

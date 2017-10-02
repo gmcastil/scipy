@@ -5,6 +5,8 @@ Tools and utilities for working with compressed sparse graphs
 # Author: Jake Vanderplas  -- <vanderplas@astro.washington.edu>
 # License: BSD, (C) 2012
 
+from __future__ import absolute_import
+
 import numpy as np
 cimport numpy as np
 
@@ -283,8 +285,8 @@ cdef void _populate_graph(np.ndarray[DTYPE_t, ndim=1, mode='c'] data,
     cdef np.npy_bool* null_ptr = <np.npy_bool*> null_flag.data
     cdef unsigned int row, col, i
 
-    for row from 0 <= row < N:
-        for i from indptr[row] <= i < indptr[row + 1]:
+    for row in range(N):
+        for i in range(indptr[row], indptr[row + 1]):
             col = indices[i]
             null_ptr[col] = 0
             # in case of multiple edges, we'll choose the smallest
@@ -323,7 +325,7 @@ def reconstruct_path(csgraph, predecessors, directed=True):
         The N x N directed compressed-sparse representation of the tree drawn
         from csgraph which is encoded by the predecessor list.
     """
-    from _validation import validate_graph
+    from ._validation import validate_graph
     csgraph = validate_graph(csgraph, directed, dense_output=False)
 
     N = csgraph.shape[0]
@@ -397,7 +399,7 @@ def construct_dist_matrix(graph,
     point i to point j.  If no path exists between point i and j, then
     predecessors[i, j] = -9999
     """
-    from _validation import validate_graph
+    from ._validation import validate_graph
     graph = validate_graph(graph, directed, dtype=DTYPE,
                            csr_output=False,
                            copy_if_dense=not directed)
@@ -430,16 +432,16 @@ cdef void _construct_dist_matrix(np.ndarray[DTYPE_t, ndim=2] graph,
     # symmetrize matrix if necessary
     if not directed:
         graph[graph == 0] = np.inf
-        for i from 0 <= i < N:
-            for j from i + 1 <= j < N:
+        for i in range(N):
+            for j in range(i + 1, N):
                 if graph[j, i] <= graph[i, j]:
                     graph[i, j] = graph[j, i]
                 else:
                     graph[j, i] = graph[i, j]
     #------------------------------------------
 
-    for i from 0 <= i < N:
-        for j from 0 <= j < N:
+    for i in range(N):
+        for j in range(N):
             null_path = True
             k2 = j
             while k2 != i:

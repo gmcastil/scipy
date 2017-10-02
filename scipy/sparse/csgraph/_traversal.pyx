@@ -5,6 +5,8 @@ Routines for traversing graphs in compressed sparse format
 # Author: Jake Vanderplas  -- <vanderplas@astro.washington.edu>
 # License: BSD, (C) 2012
 
+from __future__ import absolute_import
+
 import numpy as np
 cimport numpy as np
 
@@ -328,7 +330,7 @@ cdef unsigned int _breadth_first_directed(
     while i_nl < i_nl_end:
         pnode = node_list[i_nl]
 
-        for i from indptr[pnode] <= i < indptr[pnode + 1]:
+        for i in range(indptr[pnode], indptr[pnode + 1]):
             cnode = indices[i]
             if (cnode == head_node):
                 continue
@@ -372,7 +374,7 @@ cdef unsigned int _breadth_first_undirected(
     while i_nl < i_nl_end:
         pnode = node_list[i_nl]
 
-        for i from indptr1[pnode] <= i < indptr1[pnode + 1]:
+        for i in range(indptr1[pnode], indptr1[pnode + 1]):
             cnode = indices1[i]
             if (cnode == head_node):
                 continue
@@ -381,7 +383,7 @@ cdef unsigned int _breadth_first_undirected(
                 predecessors[cnode] = pnode
                 i_nl_end += 1
 
-        for i from indptr2[pnode] <= i < indptr2[pnode + 1]:
+        for i in range(indptr2[pnode], indptr2[pnode + 1]):
             cnode = indices2[i]
             if (cnode == head_node):
                 continue
@@ -427,12 +429,12 @@ cpdef depth_first_order(csgraph, i_start,
     Returns
     -------
     node_array : ndarray, one dimension
-        The breadth-first list of nodes, starting with specified node.  The
+        The depth-first list of nodes, starting with specified node.  The
         length of node_array is the number of nodes reachable from the
         specified node.
     predecessors : ndarray, one dimension
         Returned only if return_predecessors is True.
-        The length-N list of predecessors of each node in a breadth-first
+        The length-N list of predecessors of each node in a depth-first
         tree.  If node i is in the tree, then its parent is given by
         predecessors[i]. If node i is not in the tree (and for the parent
         node) then predecessors[i] = -9999.
@@ -488,7 +490,7 @@ cdef unsigned int _depth_first_directed(
     while i_root >= 0:
         pnode = root_list[i_root]
         no_children = True
-        for i from indptr[pnode] <= i < indptr[pnode + 1]:
+        for i in range(indptr[pnode], indptr[pnode + 1]):
             cnode = indices[i]
             if flag[cnode]:
                 continue
@@ -535,7 +537,7 @@ cdef unsigned int _depth_first_undirected(
         pnode = root_list[i_root]
         no_children = True
 
-        for i from indptr1[pnode] <= i < indptr1[pnode + 1]:
+        for i in range(indptr1[pnode], indptr1[pnode + 1]):
             cnode = indices1[i]
             if flag[cnode]:
                 continue
@@ -550,7 +552,7 @@ cdef unsigned int _depth_first_undirected(
                 break
 
         if no_children:
-            for i from indptr2[pnode] <= i < indptr2[pnode + 1]:
+            for i in range(indptr2[pnode], indptr2[pnode + 1]):
                 cnode = indices2[i]
                 if flag[cnode]:
                     continue
@@ -636,7 +638,7 @@ cdef int _connected_components_directed(
                     index += 1
 
                     # Add successor nodes
-                    for j from indptr[v] <= j < indptr[v+1]:
+                    for j in range(indptr[v], indptr[v+1]):
                         w = indices[j]
                         if lowlinks[w] == VOID:
                             with cython.boundscheck(False):
@@ -666,7 +668,7 @@ cdef int _connected_components_directed(
 
                     root = 1 # True
                     low_v = lowlinks[v]
-                    for j from indptr[v] <= j < indptr[v+1]:
+                    for j in range(indptr[v], indptr[v+1]):
                         low_w = lowlinks[indices[j]]
                         if low_w < low_v:
                             low_v = low_w
@@ -728,12 +730,12 @@ cdef int _connected_components_undirected(
 
                 # Push children onto the stack if they havn't been
                 # seen at all yet.
-                for j from indptr1[v] <= j < indptr1[v+1]:
+                for j in range(indptr1[v], indptr1[v+1]):
                     w = indices1[j]
                     if SS[w] == VOID:
                         SS[w] = SS_head
                         SS_head = w
-                for j from indptr2[v] <= j < indptr2[v+1]:
+                for j in range(indptr2[v], indptr2[v+1]):
                     w = indices2[j]
                     if SS[w] == VOID:
                         SS[w] = SS_head

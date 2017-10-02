@@ -1,12 +1,12 @@
 # Makefile for Sphinx documentation
 #
 
-PYVER = 2.7
+PYVER ?= 2.7
 PYTHON = python$(PYVER)
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = LANG=C sphinx-build
+SPHINXBUILD   = LANG=C $(PYTHON) $(shell which sphinx-build)
 PAPER         =
 
 FILES=
@@ -43,7 +43,7 @@ clean:
 
 # Build the current scipy version, and extract docs from it.
 # We have to be careful of some issues:
-# 
+#
 # - Everything must be done using the same Python version
 # - We must use eggs (otherwise they might override PYTHONPATH on import).
 # - Different versions of easy_install install to different directories (!)
@@ -74,7 +74,7 @@ real-dist: dist-build html html-scipyorg
 
 dist-build:
 	rm -f ../dist/*.egg
-	cd .. && $(PYTHON) setupegg.py bdist_egg
+	cd .. && $(PYTHON) setup.py bdist_egg
 	install -d $(subst :, ,$(INSTALL_PPH))
 	$(PYTHON) `which easy_install` --prefix=$(INSTALL_DIR) ../dist/*.egg
 
